@@ -1,25 +1,13 @@
-package bellman;
-
-
 import org.jgrapht.Graph;
-import org.psjava.algo.graph.shortestpath.BellmanFordAlgorithm;
-import org.psjava.algo.graph.shortestpath.SingleSourceShortestPathResult;
-import org.psjava.ds.graph.DirectedWeightedEdge;
-import org.psjava.ds.graph.MutableDirectedWeightedGraph;
-import org.psjava.ds.numbersystrem.IntegerNumberSystem;
-
-import java.util.List;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.clique.DegeneracyBronKerboschCliqueFinder;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.graph.DefaultEdge;
 
 public class GraphAdapter {
-//    public List<String> calculateShortestPath(Graph graph) {}
-
-    private void countShortestPathsAfterUpdate(ILinkDiscovery.LDUpdate update, TopologyFromController topology) {
-        MutableDirectedWeightedGraph<String, Integer> graph = MutableDirectedWeightedGraph.create();
-        for (Edge edge : topology.getAllEdges) {
-            graph.addEdge(edge.getSource, edge.getDest, edge.getCost);
+    public void countShortestPathsAfterUpdate(String vertex, Graph<String, DefaultEdge> topology) {
+        for (DefaultEdge outgoingEdge : topology.outgoingEdgesOf(vertex)){
+            BellmanFordShortestPath.findPathBetween(topology, vertex, topology.getEdgeTarget(outgoingEdge));
         }
-
-        BellmanFordAlgorithm algorithm = BellmanFordAlgorithm.getInstance();
-        SingleSourceShortestPathResult<String, Integer, DirectedWeightedEdge<String, Integer>> result = algorithm.calc(graph, update. , IntegerNumberSystem.getInstance());
     }
 }
