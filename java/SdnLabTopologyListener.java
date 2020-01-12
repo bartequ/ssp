@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.derby.impl.sql.execute.UpdateConstantAction;
 import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
@@ -24,12 +25,11 @@ public class SdnLabTopologyListener implements ITopologyListener {
 	protected static final Logger logger = LoggerFactory.getLogger(SdnLabTopologyListener.class);
 	//protected Topology topology = new Topology(); - niepotrzebna
 	protected Graph<String, DefaultEdge> graph;
+	protected GraphAdapter graphAdapter = new GraphAdapter();
 	
 	public SdnLabTopologyListener() {
 		graph = new DefaultDirectedGraph<>(DefaultEdge.class);
 	}
-	
-	//TODO po uzupelnieniu grafu policzyc najkrotsze sciezki
 	
 	@Override
 	public void topologyChanged(List<LDUpdate> linkUpdates) {
@@ -44,8 +44,11 @@ public class SdnLabTopologyListener implements ITopologyListener {
 					if (!graph.containsVertex(update.getDst().toString())) {
 						graph.addVertex(update.getDst().toString());
 					}
-					
 					graph.addEdge(update.getSrc().toString(), update.getDst().toString());
+					for (String vertex : graph.vertexSet()) {
+						logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1");
+						graphAdapter.countShortestPathsAfterUpdate(vertex, graph);
+					}
 					break;
 				case LINK_REMOVED:
 					logger.debug("Link removed. Update {}", update.toString());
