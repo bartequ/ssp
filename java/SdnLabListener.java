@@ -3,6 +3,7 @@ package pl.edu.agh.kt;
 import java.util.Collection;
 import java.util.Map;
 
+import org.jgrapht.Graph;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
@@ -15,7 +16,6 @@ import net.floodlightcontroller.core.module.FloodlightModuleContext;
 import net.floodlightcontroller.core.module.FloodlightModuleException;
 import net.floodlightcontroller.core.module.IFloodlightModule;
 import net.floodlightcontroller.core.module.IFloodlightService;
-import net.floodlightcontroller.topology.ITopologyListener;
 import net.floodlightcontroller.topology.ITopologyService;
 import net.floodlightcontroller.core.IFloodlightProviderService;
 import java.util.ArrayList;
@@ -26,8 +26,9 @@ import org.slf4j.LoggerFactory;
 public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 
 	protected IFloodlightProviderService floodlightProvider;
-	protected static Logger logger;
 	protected ITopologyService topologyService;
+	protected Graph graph;
+	protected static Logger logger;
 
 	@Override
 	public String getName() {
@@ -54,6 +55,9 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		PacketExtractor extractor = new PacketExtractor();
 		extractor.packetExtract(cntx);
 
+		GraphAdapter graphAdapter = new GraphAdapter();
+		graphAdapter.countShortestPathsAfterUpdate(graph, sw.toString(), endVertex);
+		
 		// TODO
 		OFPacketIn pin = (OFPacketIn) msg;
 		OFPort outPort = OFPort.of(0);
@@ -97,7 +101,7 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		floodlightProvider.addOFMessageListener(OFType.PACKET_IN, this);
 		logger.info("******************* START **************************");
 		topologyService.addListener(new SdnLabTopologyListener());
-
+		graph = NetworkGraphSingleton.getInstance();
 	}
 
 }

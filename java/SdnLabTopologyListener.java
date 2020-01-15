@@ -29,7 +29,7 @@ public class SdnLabTopologyListener implements ITopologyListener {
     protected pl.edu.agh.kt.GraphAdapter graphAdapter = new pl.edu.agh.kt.GraphAdapter();
 
     public SdnLabTopologyListener() {
-        graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        graph = NetworkGraphSingleton.getInstance();
     }
 
     @Override
@@ -41,11 +41,17 @@ public class SdnLabTopologyListener implements ITopologyListener {
                     logger.debug("Link updated. Update {}", update.toString());
                     if (!graph.containsVertex(update.getSrc().toString())) {
                         graph.addVertex(update.getSrc().toString());
+                        logger.debug(update.getSrc().toString());
                     }
                     if (!graph.containsVertex(update.getDst().toString())) {
                         graph.addVertex(update.getDst().toString());
+                        logger.debug(update.getDst().toString());
                     }
+//                    if (graph.containsEdge(graph.getEdge(arg0, arg1)) {
+//						
+//					}
                     graph.addEdge(update.getSrc().toString(), update.getDst().toString());
+                    graph.addEdge(update.getDst().toString(), update.getSrc().toString());
 					Set<String> vertexSet = graph.vertexSet();
                     for (String startVertex : vertexSet) {
                         for (String endVertex : vertexSet)

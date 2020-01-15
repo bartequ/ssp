@@ -18,11 +18,13 @@ public class GraphAdapter {
 
     public GraphPath<String, DefaultEdge> countShortestPathsAfterUpdate(Graph<String, DefaultEdge> topology, String startVertex, String endVertex) {
         GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath.findPathBetween(topology, startVertex, endVertex);
+//        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Weight for " + startVertex + "-" + endVertex + "is" + topology.getEdgeWeight(topology.getEdge(startVertex, endVertex)));
         List<String> intList = graphPath.getVertexList();
         String nodeList = intList.stream()
                 .map(n -> String.valueOf(n))
                 .collect(Collectors.joining("-", "{", "}"));
-        logger.debug("Counted shortest path from {} to {}: {}", startVertex, endVertex, nodeList);
+        logger.debug("@@@@@@@@###########################@@@@@@@@@@@@@@@@@@@@@@@Counted shortest path from "+ startVertex + "to "+ endVertex + ":" + nodeList);
+        
         return graphPath;
     }
-}
+}	
