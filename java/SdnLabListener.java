@@ -1,9 +1,13 @@
 package pl.edu.agh.kt;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.graph.DefaultEdge;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
@@ -27,7 +31,7 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 
 	protected IFloodlightProviderService floodlightProvider;
 	protected ITopologyService topologyService;
-	protected Graph graph;
+	protected Graph<String, DefaultEdge> graph;
 	protected static Logger logger;
 
 	@Override
@@ -56,16 +60,22 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		extractor.packetExtract(cntx);
 
 		GraphAdapter graphAdapter = new GraphAdapter();
-		graphAdapter.countShortestPathsAfterUpdate(graph, sw.toString(), endVertex);
+		String startSwName = sw.getPort(OFPort.of(1)).getName().split("-")[0];
+		if (!sw.getPort(OFPort.of(1)).getName().split("-")[0].equals("s3") && graph != null) {
+			GraphPath<String, DefaultEdge> graphPath = graphAdapter.countShortestPathsAfterUpdate(graph, startSwName, "s3");
+			logger.debug("!!!!!!!!!!!!!!!@@@@@@@@@@@@@###############" + graphPath.getLength() + "  " + sw.getPort(OFPort.of(1)).getName().split("-")[0]);
+			String portName = NodePortMap.getMapping(startSwName, graphPath.getVertexList().get(1).toString());
+			OFPacketIn pin = (OFPacketIn) msg;
+			OFPort outPort = sw.getPort(portName).getPortNo();
+			if (pin.getInPort() == OFPort.of(1)) {
+				outPort = OFPort.of(2);
+			} else
+				outPort = OFPort.of(1);
+			Flows.simpleAdd(sw, pin, cntx, outPort);
+		}
 		
 		// TODO
-		OFPacketIn pin = (OFPacketIn) msg;
-		OFPort outPort = OFPort.of(0);
-		if (pin.getInPort() == OFPort.of(1)) {
-			outPort = OFPort.of(2);
-		} else
-			outPort = OFPort.of(1);
-		Flows.simpleAdd(sw, pin, cntx, outPort);
+		
 
 		return Command.STOP;
 	}
@@ -100,8 +110,9 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 	public void startUp(FloodlightModuleContext context) throws FloodlightModuleException {
 		floodlightProvider.addOFMessageListener(OFType.PACKET_IN, this);
 		logger.info("******************* START **************************");
-		topologyService.addListener(new SdnLabTopologyListener());
 		graph = NetworkGraphSingleton.getInstance();
+		topologyService.addListener(new SdnLabTopologyListener());
+		logger.debug("###################################");
 	}
 
 }

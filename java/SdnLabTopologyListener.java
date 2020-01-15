@@ -47,9 +47,6 @@ public class SdnLabTopologyListener implements ITopologyListener {
                         graph.addVertex(update.getDst().toString());
                         logger.debug(update.getDst().toString());
                     }
-//                    if (graph.containsEdge(graph.getEdge(arg0, arg1)) {
-//						
-//					}
                     graph.addEdge(update.getSrc().toString(), update.getDst().toString());
                     graph.addEdge(update.getDst().toString(), update.getSrc().toString());
 					Set<String> vertexSet = graph.vertexSet();

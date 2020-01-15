@@ -6,20 +6,17 @@ import org.jgrapht.graph.DefaultEdge;
 
 public class NetworkGraphSingleton {
 
-	private static Graph graph;
+	private static Graph<String, DefaultEdge> graph;
     
 	private static NetworkGraphSingleton instance;
 	
-	private NetworkGraphSingleton() {
-		
-	};
+	private NetworkGraphSingleton() {};
 	
-	public static Graph getInstance() {
-		if(instance == null) {
-			return new DefaultDirectedGraph<>(DefaultEdge.class);
-		} else {
-			return graph;
+	public static Graph<String, DefaultEdge> getInstance() {
+		if(graph == null) {
+			graph =  new DefaultDirectedGraph<>(DefaultEdge.class);
 		}
+		return graph;
 	}
 	
 }

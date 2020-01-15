@@ -23,7 +23,7 @@ public class GraphAdapter {
         String nodeList = intList.stream()
                 .map(n -> String.valueOf(n))
                 .collect(Collectors.joining("-", "{", "}"));
-        logger.debug("@@@@@@@@###########################@@@@@@@@@@@@@@@@@@@@@@@Counted shortest path from "+ startVertex + "to "+ endVertex + ":" + nodeList);
+        logger.error("@@@@@@@@###########################@@@@@@@@@@@@@@@@@@@@@@@Counted shortest path from "+ startVertex + "to "+ endVertex + ":" + nodeList);
         
         return graphPath;
     }
