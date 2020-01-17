@@ -1,0 +1,24 @@
+<configuration scan="true">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %level [%logger{20}:%thread] %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="EV_WARN_ERR" class="net.floodlightcontroller.debugevent.DebugEventAppender">
+  </appender>
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="EV_WARN_ERR" />
+  </root>
+  <logger name="org" level="ERROR"/>
+  <logger name="io" level="ERROR"></logger> <!-- Netty logging -->
+  <logger name="LogService" level="ERROR"></logger> <!-- Restlet access logging -->
+  <logger name="net.floodlightcontroller" level="ERROR"/>
+  <logger name="org.sdnplatform" level="ERROR"></logger>
+  <logger name="net.floodlightcontroller.devicemanager" level="ERROR"></logger>
+  <logger name="net.floodlightcontroller.linkdiscovery" level="ERROR"></logger>
+  <logger name="net.floodlightcontroller.forwarding" level="ERROR"></logger>
+  <logger name="net.floodlightcontroller.core" level="ERROR"></logger>
+  <logger name="net.floodlightcontroller.topology" level="ERROR" ></logger>
+  <logger name="org.projectfloodlight.openflow" level="ERROR" ></logger>
+</configuration>
