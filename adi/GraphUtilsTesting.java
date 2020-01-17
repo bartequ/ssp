@@ -1,4 +1,4 @@
-package ssp;
+package pl.edu.agh.kt;
 
 import org.jgrapht.Graph;
 
@@ -16,10 +16,10 @@ public class GraphUtilsTesting {
         GraphUtils.addLinkEdge(graph, "s2", "s4");
         GraphUtils.addLinkEdge(graph, "s5", "s4");
 
-        List<String> sp = GraphUtils.bellamanFord(graph, "s1", "s5");
+        List<String> sp = GraphUtils.bellmanFord(graph, "s1", "s5");
         System.out.println(sp);
         GraphUtils.increaseEdgeWeight(graph, "s1", "s2");
-        sp = GraphUtils.bellamanFord(graph, "s1", "s5");
+        sp = GraphUtils.bellmanFord(graph, "s1", "s5");
         System.out.println(sp);
     }
 }

@@ -1,3 +1,5 @@
+package pl.edu.agh.kt;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;

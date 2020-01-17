@@ -7,7 +7,7 @@ import org.projectfloodlight.openflow.types.OFPort;
 
 public class NodePortMap {
 	public final static Map<String, Map<String, OFPort>> getFullMap() {
-		Map<String, Map<String, String>> portMapping = new HashMap<>();
+		Map<String, Map<String, OFPort>> portMapping = new HashMap<>();
 		portMapping.put("S1", getS1Mapping());
 		portMapping.put("S2", getS2Mapping());
 		portMapping.put("S3", getS3Mapping());
@@ -15,7 +15,7 @@ public class NodePortMap {
 		return portMapping;
 	}
 	
-	public final static String getMapping(String sourceNode, String destNode) {
+	public final static OFPort getMapping(String sourceNode, String destNode) {
 		return getFullMap().get(sourceNode).get(destNode);
 	}
 	
@@ -28,7 +28,7 @@ public class NodePortMap {
 		return node;
 	}
 	
-	private static Map<String, String> getS2Mapping() {
+	private static Map<String, OFPort> getS2Mapping() {
 		Map<String, OFPort> node = new HashMap<>();
 		node.put("S1", OFPort.of(1));
 		node.put("S3", OFPort.of(2));
@@ -36,7 +36,7 @@ public class NodePortMap {
 		return node;
 	}
 	
-	private static Map<String, String> getS3Mapping() {
+	private static Map<String, OFPort> getS3Mapping() {
 		Map<String, OFPort> node = new HashMap<>();
 		node.put("H2", OFPort.of(4));
 		node.put("S1", OFPort.of(1));
@@ -45,7 +45,7 @@ public class NodePortMap {
 		return node;
 	}
 	
-	private static Map<String, String> getS4Mapping() {
+	private static Map<String, OFPort> getS4Mapping() {
 		Map<String, OFPort> node = new HashMap<>();
 		node.put("S1", OFPort.of(1));
 		node.put("S2", OFPort.of(2));
