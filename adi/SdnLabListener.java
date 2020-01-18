@@ -61,13 +61,19 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		extractor.packetExtract(cntx);
 
 		String startSwName = getSwName(sw);
-		if (!finalNode.equals(startSwName) && !"S3".equals(startSwName)) {
-			List<String> graphPath = GraphUtils.bellmanFord(graph, startSwName, "s3");
+		if (!finalNode.equals(startSwName) && !finalNode.equals(startSwName)) {
+			List<String> graphPath = GraphUtils.bellmanFord(graph, startSwName, finalNode);
 			if (graphPath.size() > 1) {
-				OFPort outPort = NodePortMap.getMapping(startSwName, graphPath.get(1));
-				logger.error("@@@@##@#@#@#@##@#@#@#@#@#@#");
-				OFPacketIn pin = (OFPacketIn) msg;
-				Flows.simpleAdd(sw, pin, cntx, outPort);
+				for (int i = 0; i < graphPath.size()-1; i++) {
+					if (!graphPath.get(i).equals(finalNode)) {
+						logger.debug("Start" + graphPath.get(i) + "end" + graphPath.get(i+1));
+						OFPort outPort = NodePortMap.getMapping(graphPath.get(i), graphPath.get(i+1));
+						OFPacketIn pin = (OFPacketIn) msg;
+						String swTmp = graphPath.get(i).toString();
+						sw.setAttribute("datapathId", swTmp.substring(swTmp.length()-1));
+						Flows.simpleAdd(sw, pin, cntx, outPort);
+					}
+				}
 			}
 		}
 
@@ -110,7 +116,7 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		graph = Topology.getGrapgh();
 		topologyService.addListener(new SdnLabTopologyListener());
 		logger.debug("###################################");
-		finalNode = "s3";
+		finalNode = "S3";
 	}
 
 	private String getSwName(IOFSwitch sw) {
