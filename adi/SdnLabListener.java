@@ -62,12 +62,12 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 
 		String startSwName = getSwName(sw);
 		if (!finalNode.equals(startSwName) && !finalNode.equals(startSwName)) {
-			List<String> graphPath = GraphUtils.bellmanFord(graph, startSwName, finalNode);
+			List<String> graphPath = GraphUtils.calculatePath(graph, startSwName, finalNode);
 			if (graphPath.size() > 1) {
 				for (int i = 0; i < graphPath.size()-1; i++) {
 					if (!graphPath.get(i).equals(finalNode)) {
-						logger.debug("Start" + graphPath.get(i) + "end" + graphPath.get(i+1));
 						OFPort outPort = NodePortMap.getMapping(graphPath.get(i), graphPath.get(i+1));
+						logger.debug("From switch" + graphPath.get(i) + "send on port " + outPort);
 						OFPacketIn pin = (OFPacketIn) msg;
 						String swTmp = graphPath.get(i).toString();
 						sw.setAttribute("datapathId", swTmp.substring(swTmp.length()-1));
