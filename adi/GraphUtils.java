@@ -1,4 +1,4 @@
-package ssp;
+package pl.edu.agh.kt;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -42,16 +42,16 @@ public class GraphUtils {
 
     public static void addLinkEdge(Graph<String, DefaultEdge> graph, Object source, Object dest) {
         //TODO: Uncomment LOGGING
-        if(!graph.containsVertex(source.toString())) {
-            graph.addVertex(source.toString());
-            // logger.debug(update.getSrc().toString());
+        if(!graph.containsVertex(source.toString().toUpperCase())) {
+            graph.addVertex(source.toString().toUpperCase());
+//             logger.debug(update.getSrc().toString());
         }
         if (!graph.containsVertex(dest.toString())) {
-            graph.addVertex(dest.toString());
-            // logger.debug(update.getDst().toString());
+            graph.addVertex(dest.toString().toUpperCase());
+//             logger.debug(update.getDst().toString());
         }
-        graph.addEdge(source.toString(), dest.toString());
-        graph.addEdge(dest.toString(), source.toString());
+        graph.addEdge(source.toString().toUpperCase(), dest.toString().toUpperCase());
+        graph.addEdge(dest.toString().toUpperCase(), source.toString().toUpperCase());
     }
 }
 

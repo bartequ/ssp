@@ -1,4 +1,4 @@
-package ssp;
+package pl.edu.agh.kt;
 
 import org.jgrapht.Graph;
 

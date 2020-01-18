@@ -33,6 +33,7 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 	protected ITopologyService topologyService;
 	protected Graph<String, DefaultEdge> graph;
 	protected static Logger logger;
+	private String finalNode;
 
 	@Override
 	public String getName() {
@@ -59,24 +60,18 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		PacketExtractor extractor = new PacketExtractor();
 		extractor.packetExtract(cntx);
 
-		GraphAdapter graphAdapter = new GraphAdapter();
-		String startSwName = sw.getPort(OFPort.of(1)).getName().split("-")[0];
-		if (!sw.getPort(OFPort.of(1)).getName().split("-")[0].equals("s3")) {
-			GraphPath<String, DefaultEdge> graphPath = graphAdapter.countShortestPathsAfterUpdate(graph, startSwName, "s3");
-			//logger.debug("!!!!!!!!!!!!!!!@@@@@@@@@@@@@###############" + graphPath.getLength() + "  " + sw.getPort(OFPort.of(1)).getName().split("-")[0]);
-			String portName = "s4-eth3"; //NodePortMap.getMapping(startSwName, graphPath.getVertexList().get(1).toString());
-			logger.error("@@@@##@#@#@#@##@#@#@#@#@#@#");
-			OFPacketIn pin = (OFPacketIn) msg;
-			OFPort outPort = OFPort.of(1);//sw.getPort("3").getPortNo();
-//			if (pin.getInPort() == OFPort.of(1)) {
-//				outPort = OFPort.of(2);
-//			} else
-//				outPort = OFPort.of(1);
-			Flows.simpleAdd(sw, pin, cntx, outPort);
+		String startSwName = getSwName(sw);
+		if (!finalNode.equals(startSwName) && !"S3".equals(startSwName)) {
+			List<String> graphPath = GraphUtils.bellmanFord(graph, startSwName, "s3");
+			if (graphPath.size() > 1) {
+				OFPort outPort = NodePortMap.getMapping(startSwName, graphPath.get(1));
+				logger.error("@@@@##@#@#@#@##@#@#@#@#@#@#");
+				OFPacketIn pin = (OFPacketIn) msg;
+				Flows.simpleAdd(sw, pin, cntx, outPort);
+			}
 		}
-		
+
 		// TODO
-		
 
 		return Command.STOP;
 	}
@@ -115,6 +110,14 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		graph = Topology.getGrapgh();
 		topologyService.addListener(new SdnLabTopologyListener());
 		logger.debug("###################################");
+		finalNode = "s3";
 	}
 
+	private String getSwName(IOFSwitch sw) {
+		return sw.getPort(OFPort.of(1)).getName().split("-")[0].toUpperCase();
+
+	}
+
+	private void addFlows(List<String> path) {
+	}
 }

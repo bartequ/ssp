@@ -29,7 +29,7 @@ public class SdnLabTopologyListener implements ITopologyListener {
     protected pl.edu.agh.kt.GraphAdapter graphAdapter = new pl.edu.agh.kt.GraphAdapter();
 
     public SdnLabTopologyListener() {
-        graph = NetworkGraphSingleton.getInstance();
+        graph = GraphHolder.getInstance();
     }
 
     @Override
@@ -39,16 +39,16 @@ public class SdnLabTopologyListener implements ITopologyListener {
             switch (update.getOperation()) {
                 case LINK_UPDATED:
                     logger.debug("Link updated. Update {}", update.toString());
-                    if (!graph.containsVertex(update.getSrc().toString())) {
-                        graph.addVertex(update.getSrc().toString());
-                        logger.debug(update.getSrc().toString());
+                    if (!graph.containsVertex("S" + update.getSrc().getLong())) {
+                        graph.addVertex("S" + update.getSrc().getLong());
+                        logger.debug("S" + update.getSrc().getLong());
                     }
-                    if (!graph.containsVertex(update.getDst().toString())) {
-                        graph.addVertex(update.getDst().toString());
-                        logger.debug(update.getDst().toString());
+                    if (!graph.containsVertex("S" + update.getDst().getLong())) {
+                        graph.addVertex("S" + update.getDst().getLong());
+                        logger.debug("S" + update.getDst().getLong());
                     }
-                    graph.addEdge(update.getSrc().toString(), update.getDst().toString());
-                    graph.addEdge(update.getDst().toString(), update.getSrc().toString());
+                    graph.addEdge("S" + update.getSrc().getLong(), "S" + update.getDst().getLong());
+                    graph.addEdge("S" + update.getDst().getLong(), "S" + update.getSrc().getLong());
 //					Set<String> vertexSet = graph.vertexSet();
 //                    for (String startVertex : vertexSet) {
 //                        for (String endVertex : vertexSet)
