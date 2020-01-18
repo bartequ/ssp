@@ -1,22 +1,30 @@
 package pl.edu.agh.kt;
 
 import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 public class GraphUtils {
     private final static double weightIncrementor = 10;
+    private static PathMatch pathSwitch = PathMatch.PATH_SHORT;
 
-    public static List<String> bellmanFord(Graph<String, DefaultEdge> graph, String start, String end) {
-        GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath
-        		.findPathBetween(graph, start.toUpperCase(), end.toUpperCase());
-        List<String> nodeList = graphPath.getVertexList();
-        //TODO: ADD LOGG
-        return nodeList;
+    public static List<String> calculatePath(Graph<String, DefaultEdge> graph, String start, String end) {
+//        GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath.findPathBetween(graph, start, end);
+//        List<String> nodeList = graphPath.getVertexList();
+//        //TODO: ADD LOGG
+//        return nodeList;
+
+        switch (pathSwitch) {
+            case PATH_SHORT:
+                pathSwitch = PathMatch.PATH_MID;
+                return Arrays.asList("S1", "S3");
+            default:
+                pathSwitch = PathMatch.PATH_SHORT;
+                return Arrays.asList("S1", "S2", "S3");
+        }
     }
 
     public static boolean increaseEdgeWeight(Graph<String, DefaultEdge> graph, String node1, String node2) {
@@ -45,4 +53,10 @@ public class GraphUtils {
         graph.addEdge(source.toString().toUpperCase(), dest.toString().toUpperCase());
         graph.addEdge(dest.toString().toUpperCase(), source.toString().toUpperCase());
     }
+}
+
+
+enum PathMatch {
+    PATH_SHORT,
+    PATH_MID
 }
