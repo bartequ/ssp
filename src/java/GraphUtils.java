@@ -1,8 +1,11 @@
-package pl.edu.agh.kt;
+package ssp;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,11 +16,12 @@ public class GraphUtils {
 
     public static List<String> calculatePath(Graph<String, DefaultEdge> graph, String start, String end) {
         GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath.findPathBetween(graph, start, end);
-        List<String> nodeList = graphPath.getVertexList();
-        String nodeList = nodeList.stream()
-                .map(n -> String.valueOf(n))
-                .collect(Collectors.joining("-", "{", "}"));
-        logger.debug("Connection")
+
+        List<String> nodeList = new ArrayList<String>();;
+        if(graphPath != null) {
+            nodeList = graphPath.getVertexList();
+        }
+        //TODO: ADD LOGG
         return nodeList;
 
 //        switch (pathSwitch) {
@@ -45,16 +49,16 @@ public class GraphUtils {
 
     public static void addLinkEdge(Graph<String, DefaultEdge> graph, Object source, Object dest) {
         //TODO: Uncomment LOGGING
-        if(!graph.containsVertex(source.toString().toUpperCase())) {
-            graph.addVertex(source.toString().toUpperCase());
-//             logger.debug(update.getSrc().toString());
+        if(!graph.containsVertex(source.toString())) {
+            graph.addVertex(source.toString());
+            // logger.debug(update.getSrc().toString());
         }
         if (!graph.containsVertex(dest.toString())) {
-            graph.addVertex(dest.toString().toUpperCase());
-//             logger.debug(update.getDst().toString());
+            graph.addVertex(dest.toString());
+            // logger.debug(update.getDst().toString());
         }
-        graph.addEdge(source.toString().toUpperCase(), dest.toString().toUpperCase());
-        graph.addEdge(dest.toString().toUpperCase(), source.toString().toUpperCase());
+        graph.addEdge(source.toString(), dest.toString());
+        graph.addEdge(dest.toString(), source.toString());
     }
 }
 
