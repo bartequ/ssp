@@ -1,2 +1,5 @@
-# ssp
-Load balancer controller based on bellman-ford algorithm for software defined networks.
+# Sieci Sterowane Programowo - Projekt
+## Load balancer z wykorzystaniem Bellmana-Forda
+
+Funkcjonalność została dodana jako nowy moduł kontrolera.
+
