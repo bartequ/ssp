@@ -116,7 +116,7 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 		graph = Topology.getGrapgh();
 		topologyService.addListener(new SdnLabTopologyListener());
 		logger.debug("###################################");
-		finalNode = "S3";
+		finalNode = "H2";
 	}
 
 	private String getSwName(IOFSwitch sw) {
