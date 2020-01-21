@@ -12,19 +12,22 @@ public class GraphUtils {
     private static PathMatch pathSwitch = PathMatch.PATH_SHORT;
 
     public static List<String> calculatePath(Graph<String, DefaultEdge> graph, String start, String end) {
-//        GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath.findPathBetween(graph, start, end);
-//        List<String> nodeList = graphPath.getVertexList();
-//        //TODO: ADD LOGG
-//        return nodeList;
+        GraphPath<String, DefaultEdge> graphPath = BellmanFordShortestPath.findPathBetween(graph, start, end);
+        List<String> nodeList = graphPath.getVertexList();
+        String nodeList = nodeList.stream()
+                .map(n -> String.valueOf(n))
+                .collect(Collectors.joining("-", "{", "}"));
+        logger.debug("Connection")
+        return nodeList;
 
-        switch (pathSwitch) {
-            case PATH_SHORT:
-                pathSwitch = PathMatch.PATH_MID;
-                return Arrays.asList("S1", "S3");
-            default:
-                pathSwitch = PathMatch.PATH_SHORT;
-                return Arrays.asList("S1", "S2", "S3");
-        }
+//        switch (pathSwitch) {
+//            case PATH_SHORT:
+//                pathSwitch = PathMatch.PATH_MID;
+//                return Arrays.asList("S1", "S3");
+//            default:
+//                pathSwitch = PathMatch.PATH_SHORT;
+//                return Arrays.asList("S1", "S2", "S3");
+//        }
     }
 
     public static boolean increaseEdgeWeight(Graph<String, DefaultEdge> graph, String node1, String node2) {

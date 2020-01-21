@@ -69,8 +69,12 @@ public class Flows {
 		aob.setPort(outPort);
 		aob.setMaxLen(Integer.MAX_VALUE);
 		actions.add(aob.build());
-		fmb.setMatch(m).setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT).setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-				.setBufferId(pin.getBufferId()).setOutPort(outPort).setPriority(FLOWMOD_DEFAULT_PRIORITY);
+		fmb.setMatch(m)
+				.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+				.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
+				.setBufferId(pin.getBufferId())
+				.setOutPort(outPort)
+				.setPriority(FLOWMOD_DEFAULT_PRIORITY);
 		fmb.setActions(actions);
 		// write flow to switch
 		try {
@@ -103,12 +107,7 @@ public class Flows {
 			}
 		}
 
-		// TODO Detect switch type and match to create hardware-implemented flow
-		if (eth.getEtherType() == EthType.IPv4) { /*
-													 * shallow check for
-													 * equality is okay for
-													 * EthType
-													 */
+		if (eth.getEtherType() == EthType.IPv4) {
 			IPv4 ip = (IPv4) eth.getPayload();
 			IPv4Address srcIp = ip.getSourceAddress();
 			IPv4Address dstIp = ip.getDestinationAddress();
@@ -119,29 +118,26 @@ public class Flows {
 			}
 
 			if (FLOWMOD_DEFAULT_MATCH_TRANSPORT) {
-				/*
-				 * Take care of the ethertype if not included earlier, since
-				 * it's a prerequisite for transport ports.
-				 */
 				if (!FLOWMOD_DEFAULT_MATCH_IP_ADDR) {
 					mb.setExact(MatchField.ETH_TYPE, EthType.IPv4);
 				}
-
 				if (ip.getProtocol().equals(IpProtocol.TCP)) {
 					TCP tcp = (TCP) ip.getPayload();
-					mb.setExact(MatchField.IP_PROTO, IpProtocol.TCP).setExact(MatchField.TCP_SRC, tcp.getSourcePort())
+					mb.setExact(MatchField.IP_PROTO, IpProtocol.TCP)
+							.setExact(MatchField.TCP_SRC, tcp.getSourcePort())
 							.setExact(MatchField.TCP_DST, tcp.getDestinationPort());
 				} else if (ip.getProtocol().equals(IpProtocol.UDP)) {
 					UDP udp = (UDP) ip.getPayload();
-					mb.setExact(MatchField.IP_PROTO, IpProtocol.UDP).setExact(MatchField.UDP_SRC, udp.getSourcePort())
+					mb.setExact(MatchField.IP_PROTO, IpProtocol.UDP)
+							.setExact(MatchField.UDP_SRC, udp.getSourcePort())
 							.setExact(MatchField.UDP_DST, udp.getDestinationPort());
+				} else if (ip.getProtocol() == IpProtocol.ICMP) {
+					ICMP icmp = (ICMP) ipv4.getPayload();
+					mb.setExact(MatchField.IP_PROTO, IpProtocol.ICMP);
+					//logger.info("TAAA: ICMP" );
 				}
 			}
-		} else if (eth.getEtherType() == EthType.ARP) { /*
-														 * shallow check for
-														 * equality is okay for
-														 * EthType
-														 */
+		} else if (eth.getEtherType() == EthType.ARP) {
 			mb.setExact(MatchField.ETH_TYPE, EthType.ARP);
 		}
 
