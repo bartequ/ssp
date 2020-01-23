@@ -25,11 +25,10 @@ public class SdnLabTopologyListener implements ITopologyListener {
 
     protected static final Logger logger = LoggerFactory.getLogger(SdnLabTopologyListener.class);
     //protected Topology topology = new Topology(); - niepotrzebna
-    protected Graph<String, DefaultEdge> graph;
+    protected Graph<String, DefaultEdge> graph  = GraphHolder.getInstance();
     protected pl.edu.agh.kt.GraphAdapter graphAdapter = new pl.edu.agh.kt.GraphAdapter();
 
     public SdnLabTopologyListener() {
-        graph = GraphHolder.getInstance();
     }
 
     @Override
@@ -49,13 +48,6 @@ public class SdnLabTopologyListener implements ITopologyListener {
                     }
                     graph.addEdge("S" + update.getSrc().getLong(), "S" + update.getDst().getLong());
                     graph.addEdge("S" + update.getDst().getLong(), "S" + update.getSrc().getLong());
-//					Set<String> vertexSet = graph.vertexSet();
-//                    for (String startVertex : vertexSet) {
-//                        for (String endVertex : vertexSet)
-//							if (!startVertex.equals(endVertex)) {
-//                                GraphPath<String, DefaultEdge> graphPath = graphAdapter.countShortestPathsAfterUpdate(graph, startVertex, endVertex);
-//							}
-//					}
                     break;
                 case LINK_REMOVED:
                     logger.debug("Link removed. Update {}", update.toString());

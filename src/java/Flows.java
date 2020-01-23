@@ -27,6 +27,7 @@ import net.floodlightcontroller.core.IFloodlightProviderService;
 import net.floodlightcontroller.core.IOFSwitch;
 import net.floodlightcontroller.packet.Data;
 import net.floodlightcontroller.packet.Ethernet;
+import net.floodlightcontroller.packet.ICMP;
 import net.floodlightcontroller.packet.IPv4;
 import net.floodlightcontroller.packet.TCP;
 import net.floodlightcontroller.packet.UDP;
@@ -132,7 +133,7 @@ public class Flows {
 							.setExact(MatchField.UDP_SRC, udp.getSourcePort())
 							.setExact(MatchField.UDP_DST, udp.getDestinationPort());
 				} else if (ip.getProtocol() == IpProtocol.ICMP) {
-					ICMP icmp = (ICMP) ipv4.getPayload();
+					ICMP icmp = (ICMP) ip.getPayload();
 					mb.setExact(MatchField.IP_PROTO, IpProtocol.ICMP);
 					//logger.info("TAAA: ICMP" );
 				}

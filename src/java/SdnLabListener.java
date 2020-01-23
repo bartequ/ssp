@@ -56,12 +56,12 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 	public net.floodlightcontroller.core.IListener.Command receive(IOFSwitch sw, OFMessage msg,
 			FloodlightContext cntx) {
 
-		logger.info("************* NEW PACKET IN *************");
-		PacketExtractor extractor = new PacketExtractor();
-		extractor.packetExtract(cntx);
+		//logger.info("************* NEW PACKET IN *************");
+		//PacketExtractor extractor = new PacketExtractor();
+		//extractor.packetExtract(cntx);
 
 		String startSwName = getSwName(sw);
-		if (!finalNode.equals(startSwName) && !finalNode.equals(startSwName)) {
+		if (!finalNode.equals(startSwName) && graph.vertexSet().isEmpty() == false) {
 			List<String> graphPath = GraphUtils.calculatePath(graph, startSwName, finalNode);
 			if (graphPath.size() > 1) {
 				for (int i = 0; i < graphPath.size()-1; i++) {
@@ -111,12 +111,11 @@ public class SdnLabListener implements IFloodlightModule, IOFMessageListener {
 	@Override
 	public void startUp(FloodlightModuleContext context) throws FloodlightModuleException {
 		floodlightProvider.addOFMessageListener(OFType.PACKET_IN, this);
-		logger.info("******************* START **************************");
-		graph = NetworkGraphSingleton.getInstance();
-		graph = Topology.getGrapgh();
+		logger.info("***************** START ************************");
+		graph = GraphHolder.getInstance();
 		topologyService.addListener(new SdnLabTopologyListener());
 		logger.debug("###################################");
-		finalNode = "H2";
+		finalNode = "S3";
 	}
 
 	private String getSwName(IOFSwitch sw) {
